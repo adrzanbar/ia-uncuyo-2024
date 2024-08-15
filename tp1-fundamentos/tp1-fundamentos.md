@@ -23,11 +23,15 @@ Las primeras conjeturas sobre los procesos mentales necesarios para producir un 
 
 > Las máquinas son sistemas formales que están limitados por el teorema de incompletitud -no pueden establecer la verdad de su propia sentencia Gödel mientras que los humanos no tienen esa limitación.
 
+El teorema de incompletitud de Gödel sólo se aplica a los sistemas formales lo suficientemente potentes como para realizar operaciones aritméticas. Esto incluye las máquinas de Turing. Las máquinas de Turing son infinitas, mientras que los ordenadores son finitos, por lo que cualquier ordenador puede describirse como un sistema (muy grande) en lógica proposicional, que no está sujeto al teorema de incompletitud de Gödel. Los seres humanos se comportaron de forma inteligente durante miles de años antes de que inventaran las matemáticas, por lo que es poco probable que el razonamiento matemático formal desempeñe algo más que un papel periférico en lo que significa ser inteligente. Incluso si admitimos que los ordenadores tienen limitaciones en lo que pueden demostrar, no hay pruebas de que los humanos sean inmunes a esas limitaciones.
+
 ##### El argumento de la informalidad
  
 > La incapacidad de capturar todo en un conjunto de reglas lógicas se denomina problema de cualificación. Los agentes lógicos son vulnerables al problema de la cualificación
 
-No se dirige contra los ordenadores en sí, sino contra una forma concreta de programarlos
+La postura que se dio en llamar "IA a la antigua", o GOFAI, sostiene que todo comportamiento inteligente puede ser capturado por un sistema que razona lógicamente a partir de un conjunto de hechos y reglas que describen el dominio. Por tanto, corresponde al agente lógico más simple. No se dirige contra los ordenadores en sí, sino contra una forma concreta de programarlos.
+Muchas de estas cuestiones, el problema de la cualificación, la incertidumbre, el aprendizaje, las formas compiladas de toma de decisiones, se han incorporado ya al diseño estándar de agentes inteligentes. Esto demuestra el progreso de la IA, no su imposibilidad.
+Para entender cómo funcionan los agentes humanos (o de otros animales), tenemos que considerar el agente en su totalidad, no sólo el programa del agente. De hecho, el enfoque de la cognición incorporada afirma que no tiene sentido considerar el cerebro por separado: la cognición tiene lugar dentro de un cuerpo, que está integrado en un entorno.
 
 #### IA fuerte: ¿pueden las máquinas pensar de verdad?
 
