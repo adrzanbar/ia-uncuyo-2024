@@ -1,5 +1,36 @@
 # Trabajo Práctico 1 - Fundamentos
 
+## Ejercicio 1
+
+### Fundamentos Filosóficos
+
+¿Cómo funcionan las mentes? ¿Es posible que las máquinas actúen de forma inteligente como lo hacen las personas y, si lo hicieran, tendrían mentes reales y conscientes? ¿Cuáles son las implicaciones éticas de las máquinas inteligentes?
+
+La afirmación de que las máquinas podrían actuar como si fueran inteligentes se denomina hipótesis débil de la IA, y la afirmación de que las máquinas que lo hacen realmente piensan (no sólo simulan pensar) se denomina hipótesis fuerte de la IA.
+
+#### IA débil: ¿pueden las máquinas actuar con inteligencia?
+
+La IA se fundó en el supuesto de que la IA débil es posible Se define la IA como la búsqueda del mejor programa agente en una arquitectura determinada. Con esta formulación, la IA es posible por definición: para cualquier arquitectura digital con k bits de almacenamiento de programas existen exactamente 2^k programas agentes, y todo lo que tenemos que hacer para encontrar el mejor es enumerarlos y probarlos todos
+
+##### El argumento de la discapacidad
+
+> La afirmación de que "una máquina nunca puede hacer X".
+
+Los ordenadores pueden hacer muchas cosas tan bien o mejor que los humanos, incluso cosas que la gente cree que requieren una gran perspicacia y comprensión humanas.
+Las primeras conjeturas sobre los procesos mentales necesarios para producir un determinado comportamiento suelen ser erróneas. También es cierto, por supuesto, que hay muchas tareas en las que los ordenadores aún no destacan, incluida la prueba de Turing.
+
+##### La objeción matemática
+
+> Las máquinas son sistemas formales que están limitados por el teorema de incompletitud -no pueden establecer la verdad de su propia sentencia Gödel mientras que los humanos no tienen esa limitación.
+
+##### El argumento de la informalidad
+ 
+> La incapacidad de capturar todo en un conjunto de reglas lógicas se denomina problema de cualificación. Los agentes lógicos son vulnerables al problema de la cualificación
+
+No se dirige contra los ordenadores en sí, sino contra una forma concreta de programarlos
+
+#### IA fuerte: ¿pueden las máquinas pensar de verdad?
+
 ## Ejercicio 3
 
 El artículo hace los siguientes comentarios:
