@@ -156,6 +156,28 @@ En el caso de formas de vida artificial conscientes, la ética nos obligaría a 
 
 La introducción de una IA consciente cambiaría nuestras normas sociales y morales. Tendríamos que replantear nuestras normas sobre lo que significa tener derechos y cómo tratamos a seres que pueden experimentar sufrimiento o bienestar.
 
+## Ejercicio 2
+
+### 1. ¿Es posible considerar a los agentes conversacionales basados en grandes modelos de lenguaje (LLMs) como conscientes?
+
+La conciencia podría estar presente en cualquiera o en todos los animales, formas de vida extraterrestres e inteligencias artificiales, ya sean reales o imaginarias. Incluso en los casos más exóticos, aunque podría resultarnos inaccesible para siempre.
+
+Al conocer a fondo una entidad exótica, al interactuar con ella en un mundo que ambos habitamos, podemos (o no) llegar a tratarla como a un ser consciente compañero, y hablar de ella en esos términos, un lenguaje de la conciencia.
+
+La capacidad de crear un encuentro, aunque sólo sea en principio, establece la candidatura de una entidad exótica a la hermandad de los seres conscientes.
+
+Si los encuentros pueden producirse en la realidad, no sólo hipotéticamente, entonces los participantes humanos pueden (o no) empezar a verlo como un ser consciente semejante, y pueden (o no) empezar a hablar de él utilizando el vocabulario de la conciencia.
+
+Debemos resistirnos a la tentación de preguntar si una entidad así es consciente como si la conciencia fuera algo cuya esencia está ahí fuera para que la descubra la filosofía (o la neurociencia) y que, al mismo tiempo, tiene un aspecto irreductiblemente privado y oculto. En su lugar, podemos preguntarnos si sería posible diseñar un encuentro con la entidad, y cómo se adaptaría nuestro lenguaje de la conciencia a la llegada de tal entidad a nuestro mundo compartido si tales encuentros tuvieran lugar. Sólo lo que es público puede contribuir a este proceso, a saber, el comportamiento y el mecanismo.
+
+### ¿Cuáles son las implicaciones éticas de atribuir conciencia y, por ende, "derechos morales" a los agentes de IA avanzados? 
+
+Los humanos están de acuerdo en el lenguaje que utilizan, que "no está de acuerdo en las opiniones, sino en la forma de vida". Por mucho que el lenguaje de la conciencia tenga que evolucionar para hacer frente a la presencia entre nosotros de entidades exóticas similares a la mente.
+
+En un futuro de realidad mixta, podríamos encontrar un elenco de asistentes, guías, amigos, bufones, mascotas, antepasados, parejas románticas... acompañando cada vez más a las personas en su vida cotidiana. Desde un punto de vista optimista (y fantástico), esto podría considerarse como un reencantamiento de nuestro mundo espiritualmente despojado al poblarlo con nuevas formas de ser "mágico". Desde un punto de vista pesimista (y quizá más realista), el resultado podría ser un mundo en el que las relaciones humanas auténticas se degraden hasta quedar irreconocibles, en el que los usuarios prefieran la compañía de agentes de inteligencia artificial a la de otros seres humanos. O tal vez el mundo encuentre un término medio y, existencialmente hablando, las cosas sigan más o menos como antes.
+
+Traducción realizada con la versión gratuita del traductor DeepL.com
+
 ## Ejercicio 3
 
 El artículo hace los siguientes comentarios:
