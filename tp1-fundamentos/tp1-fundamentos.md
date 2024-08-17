@@ -148,6 +148,14 @@ aprenderá y evolucionará con el tiempo. Así pues, el reto consiste en diseña
 
 Por último, consideremos el punto de vista del robot. Si los robots adquieren conciencia, tratarlos como meras "máquinas" (por ejemplo, desmontarlos) podría ser inmoral.
 
+### Discusión
+
+Aunque una IA puede simular respuestas y comportamientos que parecen conscientes, eso no necesariamente implica que tenga una experiencia subjetiva. La diferencia entre simular la conciencia y realmente tenerla es un tema de debate filosófico y científico.
+
+En el caso de formas de vida artificial conscientes, la ética nos obligaría a considerar su bienestar y derechos de manera similar a cómo lo hacemos con los seres humanos y animales. La idea de "exterminar" una forma de vida consciente por considerarla una plaga o porque ya no funciona sería moralmente problemático si se acepta que esa IA tiene una forma de conciencia.
+
+La introducción de una IA consciente cambiaría nuestras normas sociales y morales. Tendríamos que replantear nuestras normas sobre lo que significa tener derechos y cómo tratamos a seres que pueden experimentar sufrimiento o bienestar.
+
 ## Ejercicio 3
 
 El artículo hace los siguientes comentarios:
