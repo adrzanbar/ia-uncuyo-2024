@@ -1,7 +1,7 @@
 import random
 
 class Environment:
-    def __init__(self, sizeX, sizeY, init_posX, init_posY, dirt_rate):
+    def __init__(self, sizeX, sizeY, init_posX, init_posY, dirt_rate, max_actions = 1000):
         """
         Inicializa el entorno con las dimensiones dadas, posición inicial del agente y tasa de suciedad.
         """
@@ -11,25 +11,26 @@ class Environment:
         self.agent_posY = init_posY
         self.dirt_rate = dirt_rate
         self.grid = self.initialize_grid()
-        self.clean_cells = set()  # Set de celdas que han sido limpiadas
+        self.clean_cells = 0
+        self.MAX_ACTIONS = max_actions
         self.action_count = 0
 
     def initialize_grid(self):
         """
         Inicializa la cuadrícula con suciedad según la tasa de suciedad.
         """
-        grid = [[0 for _ in range(self.sizeX)] for _ in range(self.sizeY)]
+        grid = [[False for _ in range(self.sizeX)] for _ in range(self.sizeY)]
         num_dirty_cells = int(self.sizeX * self.sizeY * self.dirt_rate)
         dirty_cells = random.sample([(x, y) for x in range(self.sizeX) for y in range(self.sizeY)], num_dirty_cells)
         for (x, y) in dirty_cells:
-            grid[y][x] = 1
+            grid[y][x] = True
         return grid
 
     def accept_action(self, action):
         """
         Acepta una acción del agente y actualiza el entorno en consecuencia.
         """
-        if self.action_count >= 1000:
+        if self.action_count >= self.MAX_ACTIONS:
             return
 
         if action == 'Arriba':
@@ -46,9 +47,8 @@ class Environment:
                 self.agent_posX += 1
         elif action == 'Limpiar':
             if self.is_dirty():
-                self.clean_cells.add((self.agent_posX, self.agent_posY))
-                # Mark the cell as cleaned in the grid
-                self.grid[self.agent_posY][self.agent_posX] = 0
+                self.grid[self.agent_posY][self.agent_posX] = False
+                self.clean_cells += 1
         elif action == 'NoHacerNada':
             pass
         else:
@@ -60,13 +60,13 @@ class Environment:
         """
         Verifica si la celda actual contiene suciedad.
         """
-        return self.grid[self.agent_posY][self.agent_posX] == 1
+        return self.grid[self.agent_posY][self.agent_posX]
 
     def get_performance(self):
         """
         Devuelve la medida de rendimiento del agente.
         """
-        return len(self.clean_cells)
+        return self.clean_cells
 
     def print_environment(self):
         """

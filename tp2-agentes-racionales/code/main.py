@@ -1,6 +1,7 @@
 from experiment import run_experiment
 from agent import Agent
 from random_agent import RandomAgent
+import time
 
 def main():
     sizes = [2, 4, 8, 16, 32, 64, 128]
@@ -21,8 +22,8 @@ def main():
                 results.append((size, dirt_rate, 'Random', performance, elapsed_time))
 
     # Guarda los resultados en un archivo CSV
-    with open('experiment_results.csv', 'w') as file:
-        file.write('Size, Dirt Rate, Agent Type, Performance, Time\n')
+    with open(f'experiment_results{time.time()}.csv', 'w') as file:
+        file.write('size, dirt_rate, Agente, Medida de Desempeño, Tiempo\n')
         for result in results:
             file.write(f'{result[0]}, {result[1]}, {result[2]}, {result[3]}, {result[4]}\n')
 
