@@ -8,23 +8,28 @@ def main():
     dirt_rates = [0.1, 0.2, 0.4, 0.8]
     num_trials = 10
 
-    results = []
+    reflexive_results = []
+    random_results = []
 
     for size in sizes:
         for dirt_rate in dirt_rates:
             for _ in range(num_trials):
                 # Reflexive Agent Experiment
                 performance, elapsed_time = run_experiment(size, size, dirt_rate, Agent)
-                results.append((size, dirt_rate, 'Reflexive', performance, elapsed_time))
+                reflexive_results.append((size, dirt_rate, 'Reflexivo', performance, elapsed_time))
 
                 # Random Agent Experiment
                 performance, elapsed_time = run_experiment(size, size, dirt_rate, RandomAgent)
-                results.append((size, dirt_rate, 'Random', performance, elapsed_time))
+                random_results.append((size, dirt_rate, 'Aleatorio', performance, elapsed_time))
 
-    # Guarda los resultados en un archivo CSV
-    with open(f'experiment_results{time.time()}.csv', 'w') as file:
-        file.write('size, dirt_rate, Agente, Medida de Desempeño, Tiempo\n')
-        for result in results:
+    with open(f'reflexive_experiment_results{time.time()}.csv', 'w') as file:
+        file.write('Tamaño, Tasa de Suciedad, Agente, Medida de Desempeño, Tiempo\n')
+        for result in reflexive_results:
+            file.write(f'{result[0]}, {result[1]}, {result[2]}, {result[3]}, {result[4]}\n')
+
+    with open(f'random_experiment_results{time.time()}.csv', 'w') as file:
+        file.write('Tamaño, Tasa de Suciedad, Agente, Medida de Desempeño, Tiempo\n')
+        for result in random_results:
             file.write(f'{result[0]}, {result[1]}, {result[2]}, {result[3]}, {result[4]}\n')
 
 if __name__ == "__main__":
