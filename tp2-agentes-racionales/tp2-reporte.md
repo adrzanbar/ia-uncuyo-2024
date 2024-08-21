@@ -73,7 +73,13 @@ Repetir 10 veces cada combinación.
 
 ## Análisis y discusión de resultados
 
-### Agente reflexivo simple
+![10 experimentos con tasa de suciedad de 0.1](https://docs.google.com/spreadsheets/d/1Tt72QdzWke_uWjJFPaqwVoYD10OCGid7GgmFo_ZxSis/pubchart?oid=937821080&format=image)
 
+![10 experimentos con tasa de suciedad de 0.2](https://docs.google.com/spreadsheets/d/1Tt72QdzWke_uWjJFPaqwVoYD10OCGid7GgmFo_ZxSis/pubchart?oid=571141955&format=image)
 
+![10 experimentos con tasa de suciedad de 0.4](https://docs.google.com/spreadsheets/d/1Tt72QdzWke_uWjJFPaqwVoYD10OCGid7GgmFo_ZxSis/pubchart?oid=321567321&format=image)
 
+![10 experimentos con tasa de suciedad de 0.8](https://docs.google.com/spreadsheets/d/1Tt72QdzWke_uWjJFPaqwVoYD10OCGid7GgmFo_ZxSis/pubchart?oid=382068573&format=image)
+
+- El agente reflexivo simple tiene un mejor desempeño que el agente aleatorio para esta medida de desempeño.
+- En general ambos agentes se desempeñan mejor en entornos más grandes aunque con utilidad marginal decreciente. La misma es mas pronunciada para el agente aleatorio.
