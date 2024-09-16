@@ -81,5 +81,19 @@ Repetir 10 veces cada combinación.
 
 ![10 experimentos con tasa de suciedad de 0.8](https://docs.google.com/spreadsheets/d/1Tt72QdzWke_uWjJFPaqwVoYD10OCGid7GgmFo_ZxSis/pubchart?oid=382068573&format=image)
 
-- El agente reflexivo simple tiene un mejor desempeño que el agente aleatorio para esta medida de desempeño.
-- En general ambos agentes se desempeñan mejor en entornos más grandes aunque con utilidad marginal decreciente. La misma es mas pronunciada para el agente aleatorio.
+
+1. **Comparación entre el Agente Reflexivo y el Agente Aleatorio:**
+   - **Agente Reflexivo:**
+     El agente reflexivo muestra un desempeño significativamente mejor que el agente aleatorio en la medida de desempeño a lo largo de todos los tamaños de grilla y tasas de suciedad evaluadas. Esto es particularmente evidente en entornos más grandes y con tasas de suciedad más altas. La capacidad del agente reflexivo para realizar acciones de forma basada en su percepción directa de la suciedad le permite limpiar de manera más eficiente en comparación con el agente aleatorio, que realiza acciones sin tener en cuenta el estado del entorno.
+
+   - **Agente Aleatorio:**
+     El agente aleatorio, que elige acciones sin seguir una estrategia específica, muestra un desempeño mucho menos eficiente en la limpieza, particularmente en grillas más grandes. Aunque el desempeño mejora con el tamaño del entorno, la tasa de mejora es más lenta y menos consistente en comparación con el agente reflexivo. Esto se debe a la falta de una estrategia adaptativa y basada en el conocimiento del estado del entorno.
+
+2. **Impacto del Tamaño de la Grilla:**
+   - Para ambos tipos de agentes, se observa una tendencia general de mejora en el desempeño a medida que el tamaño de la grilla aumenta. Esto puede ser atribuido a la mayor cantidad de espacio disponible para maniobras y la posibilidad de realizar más acciones que afectan la limpieza de la grilla. Sin embargo, el rendimiento mejora de manera marginal en grillas muy grandes, sugiriendo que existe un límite en la eficiencia alcanzable incluso para el agente reflexivo.
+
+3. **Efecto de la Tasa de Suciedad:**
+   - Con tasas de suciedad más altas, el desempeño de ambos agentes mejora notablemente, en comparación con tasas de suciedad más bajas. Esto se debe a que la mayor cantidad de suciedad aumenta la oportunidad y la necesidad de aspirar, lo que resulta en una mayor cantidad de recompensas para ambos agentes. No obstante, la diferencia entre el agente reflexivo y el agente aleatorio sigue siendo notable, con el reflexivo mostrando una ventaja significativa en todos los tamaños de grilla.
+
+4. **Utilidad Marginal Decreciente:**
+   - La utilidad marginal decreciente es evidente en ambos agentes a medida que aumenta el tamaño de la grilla. Para el agente reflexivo, aunque el desempeño continúa mejorando con el aumento del tamaño de la grilla, el ritmo de mejora se ralentiza. Este patrón es aún más pronunciado en el agente aleatorio, donde las ganancias en desempeño disminuyen notablemente en grillas grandes.

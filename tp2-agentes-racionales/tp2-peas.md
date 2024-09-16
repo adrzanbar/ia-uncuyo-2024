@@ -107,9 +107,9 @@
 - **Observabilidad:** Totalmente observable (el entorno es completamente visible).
 - **Número de Agentes:** Un solo agente (el jugador).
 - **Determinismo:** Determinístico (la pared devuelve la pelota de manera predecible).
-- **Episódico vs. Secuencial:** Episódico (cada golpe es independiente, aunque la práctica se basa en mejorar la técnica).
+- **Episódico vs. Secuencial:** Secuencial (el golpe actual determina la trayectoria de la pelota para el golpe siguiente).
 - **Dinámico vs. Estático:** Estático (la pared no cambia y el entorno permanece constante).
-- **Discreto vs. Continuo:** Discreto (los golpes son eventos individuales).
+- **Discreto vs. Continuo:** Continui (la pelota tiene infinitas posiciones no contables).
 - **Conocido vs. Desconocido:** Conocido (las reglas y el comportamiento de la pared son bien entendidos).
 
 ### e) Realizar un salto de altura
