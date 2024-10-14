@@ -29,15 +29,21 @@ life = 1000
 
 experiment = Experiment(size, p, 30)
 
+print("Frozen Lake")
+print("BFS")
 fl_bfs = experiment(life, FrozenLakeProblem, breadth_first_graph_search)
+print("DFS")
 fl_dfs = experiment(life, FrozenLakeProblem, depth_first_graph_search)
+print("DLS")
 ## Expected manhattan distance = 2 * p * size / 3
 fl_dls = experiment(
     life,
     FrozenLakeProblem,
     partial(depth_limited_search, limit=round(2 * p * size / 3)),
 )
+print("UCS")
 fl_ucs = experiment(life, FrozenLakeProblem, uniform_cost_search)
+print("Random")
 # An agent searching a tree depth first in a problem where the possible actions
 # are a single random action effectively becomes a random agent.
 fl_r = experiment(life, RandomProblem, depth_first_tree_search)
