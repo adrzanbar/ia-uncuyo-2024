@@ -1,3 +1,4 @@
+from collections import deque
 import random
 from search import Node, Problem, SimpleProblemSolvingAgentProgram
 import gymnasium as gym
@@ -28,11 +29,38 @@ def generate_random_map_custom(size, p):
     return grid
 
 
+class FrozenLakeState:
+
+    def __init__(self, position, move_count):
+        self.position = position
+        self.move_count = move_count
+
+
+class FrozenLakeNode(Node):
+
+    def expand(self, problem):
+        return [
+            self.child_node(problem, action)
+            for action in problem.actions(FrozenLakeState(self.state, self.depth))
+        ]
+
+    def child_node(self, problem, action):
+        next_state = problem.result(self.state, action)
+        next_node = FrozenLakeNode(
+            next_state,
+            self,
+            action,
+            problem.path_cost(self.path_cost, self.state, action, next_state),
+        )
+        return next_node
+
+
 class FrozenLakeProblem(Problem):
 
-    def __init__(self, start, goal, state):
+    def __init__(self, start, goal, grid, life):
         super().__init__(start, goal)
-        self.grid = state
+        self.grid = grid
+        self.life = life
 
     def validate_action(self, position: int, action):
         i, j = divmod(position, len(self.grid))
@@ -46,8 +74,14 @@ class FrozenLakeProblem(Problem):
             return i > 0 and self.grid[i - 1][j] != "H"
         return False
 
-    def actions(self, state):
-        return [action for action in range(4) if self.validate_action(state, action)]
+    def actions(self, state: FrozenLakeState):
+        if state.move_count >= self.life:
+            return []
+        return [
+            action
+            for action in range(4)
+            if self.validate_action(state.position, action)
+        ]
 
     def result(self, state, action):
         if action == 0:
@@ -68,12 +102,21 @@ class ActionCostProblem(FrozenLakeProblem):
 
 class RandomProblem(FrozenLakeProblem):
 
-    def actions(self, state):
-        actions = super().actions(state)
-        return [random.choice(actions)] if actions else []
+    def actions(self, state: FrozenLakeState):
+        if state.move_count >= self.life:
+            return []
+        return [
+            random.choice(
+                [
+                    action
+                    for action in range(4)
+                    if self.validate_action(state.position, action)
+                ]
+            )
+        ]
 
 
-class RandomActionCostProblem(ActionCostProblem, RandomProblem):
+class ActionCostRandomProblem(ActionCostProblem, RandomProblem):
     pass
 
 
@@ -106,13 +149,10 @@ class FrozenLakeAgent(SimpleProblemSolvingAgentProgram):
                     break
             if start is not None:
                 break
-        return self.problem_class(start, goal, state)
+        return self.problem_class(start, goal, state, self.life)
 
     def search(self, problem):
-        node = self.search_algorithm(problem)
+        node = self.search_algorithm(problem, node_class=FrozenLakeNode)
         if isinstance(node, Node):
-            solution = node.solution()
-            if self.life is not None and len(solution) > self.life:
-                return None
             self.node = node
-            return solution
+            return node.solution()

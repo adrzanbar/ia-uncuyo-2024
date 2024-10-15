@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from experiment import Experiment
-from frozen_lake import ActionCostProblem, FrozenLakeProblem, RandomProblem
+from frozen_lake import (
+    ActionCostProblem,
+    ActionCostRandomProblem,
+    FrozenLakeProblem,
+    RandomProblem,
+)
 from search import (
     breadth_first_graph_search,
     depth_first_graph_search,
@@ -35,7 +40,7 @@ fl_bfs = experiment(life, FrozenLakeProblem, breadth_first_graph_search)
 print("DFS")
 fl_dfs = experiment(life, FrozenLakeProblem, depth_first_graph_search)
 print("DLS")
-## Expected manhattan distance = 2 * p * size / 3
+## Expected Manhattan distance = 2 * p * size / 3
 fl_dls = experiment(
     life,
     FrozenLakeProblem,
@@ -90,11 +95,24 @@ boxplot(
     ["BFS", "DFS", "DLS", "UCS", "Random"],
 )
 
+print("Frozen Lake")
+print("BFS")
 ac_bfs = experiment(life, ActionCostProblem, breadth_first_graph_search)
+print("DFS")
 ac_dfs = experiment(life, ActionCostProblem, depth_first_graph_search)
-ac_dls = experiment(life, ActionCostProblem, partial(depth_limited_search, limit=10))
+print("DLS")
+## Expected Manhattan distance = 2 * p * size / 3
+ac_dls = experiment(
+    life,
+    ActionCostProblem,
+    partial(depth_limited_search, limit=round(2 * p * size / 3)),
+)
+print("UCS")
 ac_ucs = experiment(life, ActionCostProblem, uniform_cost_search)
-ac_r = experiment(life, RandomProblem, depth_first_graph_search)
+print("Random")
+# An agent searching a tree depth first in a problem where the possible actions
+# are a single random action effectively becomes a random agent.
+ac_r = experiment(life, ActionCostRandomProblem, depth_first_tree_search)
 
 boxplot(
     [
