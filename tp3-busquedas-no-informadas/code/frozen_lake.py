@@ -97,27 +97,13 @@ class FrozenLakeProblem(Problem):
 class ActionCostProblem(FrozenLakeProblem):
 
     def path_cost(self, c, state1, action, state2):
-        return c + action
+        return c + action + 1
 
 
 class RandomProblem(FrozenLakeProblem):
 
     def actions(self, state: FrozenLakeState):
-        if state.move_count >= self.life:
-            return []
-        return [
-            random.choice(
-                [
-                    action
-                    for action in range(4)
-                    if self.validate_action(state.position, action)
-                ]
-            )
-        ]
-
-
-class ActionCostRandomProblem(ActionCostProblem, RandomProblem):
-    pass
+        return [random.choice(super().actions(state))] if super().actions(state) else []
 
 
 class FrozenLakeAgent(SimpleProblemSolvingAgentProgram):
@@ -127,8 +113,6 @@ class FrozenLakeAgent(SimpleProblemSolvingAgentProgram):
         self.life = life
         self.problem_class = problem_class
         self.search_algorithm = search_algorithm
-        self.solution = []
-        self.path = []
         self.node = None
 
     def update_state(self, state, percept):

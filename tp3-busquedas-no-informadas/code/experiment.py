@@ -18,23 +18,16 @@ class Experiment:
             self.grids.append(grid)
 
     def __call__(self, life, problem_class, search_algorithm):
-        state_counts = []
-        total_costs = []
+        nodes = []
         execution_times = []
         for grid in self.grids:
             agent = FrozenLakeAgent(life, problem_class, search_algorithm)
             start = time.time()
             agent(grid)
             end = time.time()
+            nodes.append(agent.node)
             execution_times.append(end - start)
-            if isinstance(agent.node, Node):
-                state_counts.append(len(agent.node.path()))
-                total_costs.append(agent.node.path_cost)
-            else:
-                state_counts.append(agent.node)
-                total_costs.append(agent.node)
         return {
-            "total_costs": total_costs,
-            "state_counts": state_counts,
+            "nodes": nodes,
             "execution_times": execution_times,
         }

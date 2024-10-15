@@ -429,12 +429,12 @@ greedy_best_first_graph_search = best_first_graph_search
 # Greedy best-first search is accomplished by specifying f(n) = h(n).
 
 
-def astar_search(problem, h=None, display=False):
+def astar_search(problem, h=None, display=False, node_class=Node):
     """A* search is best-first graph search with f(n) = g(n)+h(n).
     You need to specify the h function when you call astar_search, or
     else in your Problem subclass."""
     h = memoize(h or problem.h, "h")
-    return best_first_graph_search(problem, lambda n: n.path_cost + h(n), display)
+    return best_first_graph_search(problem, lambda n: n.path_cost + h(n), display, node_class)
 
 
 # ______________________________________________________________________________
