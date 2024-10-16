@@ -37,6 +37,20 @@ Un problema puede definirse formalmente mediante cinco componentes:
 
 Una solución a un problema es una secuencia de acciones que lleva del estado inicial a un estado objetivo. La calidad de la solución se mide por la función de coste del camino, y una solución óptima tiene el coste del camino más bajo entre todas las soluciones.
 
+Los algoritmos de búsqueda se juzgan en función de su completitud, optimalidad, complejidad temporal y complejidad espacial. La complejidad depende de b, el factor de ramificación en el espacio de estados, y d, la profundidad de la solución más superficial.
+
+Los métodos de búsqueda no informada sólo tienen acceso a la definición del problema. Algunos de los algoritmos básicos son los siguientes:
+- La búsqueda por amplitud expande primero los nodos menos profundos; es completa, óptima para costes de paso unitarios, pero tiene una complejidad espacial exponencial.
+- La búsqueda de coste uniforme expande el nodo con el menor coste de camino, g(n), y es óptima para costes de paso generales.
+para costes de paso generales.
+- La búsqueda por profundidad expande primero el nodo no expandido más profundo. No es completa ni óptima, pero tiene una complejidad espacial lineal. La búsqueda limitada en profundidad añade un límite de profundidad.
+
+Los métodos de búsqueda informada pueden tener acceso a una función heurística h(n) que estima
+el coste de una solución a partir de n.
+- La búsqueda A* expande los nodos con un mínimo de f (n) = g(n) + h(n). A* es completo y óptimo, siempre que h(n) sea consistente. La complejidad espacial de A* sigue siendo prohibitiva.
+
+Una heurística h(n) es consistente si, para cada nodo n y cada sucesor n' de n generado por cualquier acción a, el coste estimado de alcanzar la meta desde n no es mayor que el coste de paso de llegar a n' más el coste estimado de alcanzar la meta desde n'.
+
 ## Diseño experimental
 
 Se generan 30 entornos aleatorios de FrozenLake de tamaño 100x100 con proabilidad de hoyos de 0.08.
