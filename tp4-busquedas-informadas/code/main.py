@@ -87,7 +87,7 @@ if __name__ == "__main__":
     fl_r = experiment(FrozenLakeAgent(life, RandomProblem, depth_first_tree_search))
 
     print("A*")
-    ac_astar = experiment(
+    fl_astar = experiment(
         InformedAgent(
             life, FrozenLakeProblem, astar_search, manhattan_distance_heuristic
         )
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     ac_ucs = experiment(FrozenLakeAgent(life, ActionCostProblem, uniform_cost_search))
 
     print("A*")
-    fl_astar = experiment(
+    ac_astar = experiment(
         InformedAgent(
             life, ActionCostProblem, astar_search, manhattan_distance_heuristic
         )
