@@ -1,7 +1,8 @@
 from collections import deque
+import copy
+from functools import partial
 import random
 from search import Node, Problem, SimpleProblemSolvingAgentProgram
-import gymnasium as gym
 
 
 def generate_random_map_custom(size, p):
@@ -140,3 +141,32 @@ class FrozenLakeAgent(SimpleProblemSolvingAgentProgram):
         if isinstance(node, Node):
             self.node = node
             return node.solution()
+        else:
+            self.node = None
+        
+
+class InformedAgent(FrozenLakeAgent):
+
+    def __init__(self, life, problem_class, search_algorithm, heuristic):
+        super().__init__(life, problem_class, search_algorithm)
+        self.heuristic = heuristic
+
+    def search(self, problem):
+        node = self.search_algorithm(
+            problem, h=partial(self.heuristic, problem), node_class=FrozenLakeNode
+        )
+        if isinstance(node, Node):
+            self.node = node
+            return node.solution()
+        else:
+            self.node = None
+
+
+def manhattan_distance(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def manhattan_distance_heuristic(problem, node):
+    return manhattan_distance(
+        divmod(node.state, len(problem.grid)), divmod(problem.goal, len(problem.grid))
+    )

@@ -1,5 +1,7 @@
+import copy
 import time
-from frozen_lake import FrozenLakeAgent, generate_random_map_custom
+
+from frozen_lake import generate_random_map_custom
 from search import Node
 
 
@@ -17,11 +19,10 @@ class Experiment:
             grid = generate_random_map_custom(self.size, self.p)
             self.grids.append(grid)
 
-    def __call__(self, life, problem_class, search_algorithm):
+    def __call__(self, agent):
         nodes = []
         execution_times = []
         for grid in self.grids:
-            agent = FrozenLakeAgent(life, problem_class, search_algorithm)
             start = time.time()
             agent(grid)
             end = time.time()

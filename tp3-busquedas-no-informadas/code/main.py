@@ -6,6 +6,7 @@ import numpy as np
 from experiment import Experiment
 from frozen_lake import (
     ActionCostProblem,
+    FrozenLakeAgent,
     FrozenLakeProblem,
     RandomProblem,
 )
@@ -38,21 +39,32 @@ life = 1000
 experiment = Experiment(size, p, 30)
 
 print("Frozen Lake")
+
 print("BFS")
-fl_bfs = experiment(life, FrozenLakeProblem, breadth_first_graph_search)
+fl_bfs = experiment(
+    FrozenLakeAgent(life, FrozenLakeProblem, breadth_first_graph_search)
+)
+
 print("DFS")
-fl_dfs = experiment(life, FrozenLakeProblem, depth_first_graph_search)
+fl_dfs = experiment(FrozenLakeAgent(life, FrozenLakeProblem, depth_first_graph_search))
+
 print("DLS")
-fl_dls = experiment(life, FrozenLakeProblem, partial(depth_limited_search, limit=10))
+fl_dls = experiment(
+    FrozenLakeAgent(life, FrozenLakeProblem, partial(depth_limited_search, limit=10))
+)
+
 print("UCS")
-fl_ucs = experiment(life, FrozenLakeProblem, uniform_cost_search)
+fl_ucs = experiment(FrozenLakeAgent(life, FrozenLakeProblem, uniform_cost_search))
+
 print("Random")
 # An agent searching a tree depth first in a problem where the possible actions
 # are a single random action effectively becomes a random agent.
-fl_r = experiment(life, RandomProblem, depth_first_tree_search)
+fl_r = experiment(FrozenLakeAgent(life, RandomProblem, depth_first_tree_search))
+
 print("Action Cost")
+
 print("UCS")
-ac_ucs = experiment(life, ActionCostProblem, uniform_cost_search)
+ac_ucs = experiment(FrozenLakeAgent(life, ActionCostProblem, uniform_cost_search))
 
 total_cost_series = [
     [n.path_cost if isinstance(n, Node) else None for n in fl_bfs["nodes"]],
