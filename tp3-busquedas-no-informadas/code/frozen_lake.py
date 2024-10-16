@@ -117,6 +117,7 @@ class FrozenLakeAgent(SimpleProblemSolvingAgentProgram):
         self.node = None
 
     def update_state(self, state, percept):
+        self.seq = []
         return percept
 
     def formulate_goal(self, state):

@@ -155,7 +155,6 @@ class SimpleProblemSolvingAgentProgram:
     def __call__(self, percept):
         """[Figure 3.1] Formulate a goal and problem, then
         search for a sequence of actions to solve it."""
-        self.seq = []
         self.state = self.update_state(self.state, percept)
         if not self.seq:
             goal = self.formulate_goal(self.state)
