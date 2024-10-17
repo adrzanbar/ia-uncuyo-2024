@@ -1,5 +1,9 @@
 import random
-from utils import argmax_random_tie
+import sys
+import time
+
+import numpy as np
+from utils import argmax_random_tie, is_in, probability, weighted_sampler
 
 
 class Problem:
@@ -193,47 +197,6 @@ class Node:
 # ______________________________________________________________________________
 
 
-class SimpleProblemSolvingAgentProgram:
-    """
-    [Figure 3.1]
-    Abstract framework for a problem-solving agent.
-    """
-
-    def __init__(self, initial_state=None):
-        """State is an abstract representation of the state
-        of the world, and seq is the list of actions required
-        to get to a particular state from the initial state(root)."""
-        self.state = initial_state
-        self.seq = []
-
-    def __call__(self, percept):
-        """[Figure 3.1] Formulate a goal and problem, then
-        search for a sequence of actions to solve it."""
-        self.state = self.update_state(self.state, percept)
-        if not self.seq:
-            goal = self.formulate_goal(self.state)
-            problem = self.formulate_problem(self.state, goal)
-            self.seq = self.search(problem)
-            if not self.seq:
-                return None
-        return self.seq.pop(0)
-
-    def update_state(self, state, percept):
-        raise NotImplementedError
-
-    def formulate_goal(self, state):
-        raise NotImplementedError
-
-    def formulate_problem(self, state, goal):
-        raise NotImplementedError
-
-    def search(self, problem):
-        raise NotImplementedError
-
-
-# ______________________________________________________________________________
-
-
 def hill_climbing(problem):
     """
     [Figure 4.2]
@@ -251,65 +214,151 @@ def hill_climbing(problem):
         if problem.value(neighbor.state) <= problem.value(current.state):
             break
         current = neighbor
-    return current.state
+    return current
 
 
 # ______________________________________________________________________________
 
 
-class InstrumentedProblem(Problem):
-    """Delegates to a problem, and keeps statistics."""
+def benchmark(search_fn, problem):
+    """
+    Benchmark local search algorithms.
 
-    def __init__(self, problem):
-        self.problem = problem
-        self.succs = self.goal_tests = self.states = 0
-        self.found = None
+    Args:
+    - search_fn: The search function to be benchmarked.
+    - problem: The problem instance for the search function.
 
-    def actions(self, state):
-        self.succs += 1
-        return self.problem.actions(state)
+    Returns:
+    - result: The output of the search function (final state).
+    - state_count: The number of states explored.
+    - execution_time: The time taken to execute the search function.
+    - heuristic_value: The heuristic value of the resulting state.
+    """
+    start_time = time.time()
+    current = search_fn(problem)
+    execution_time = time.time() - start_time
+    state_count = current.depth
 
-    def result(self, state, action):
-        self.states += 1
-        return self.problem.result(state, action)
-
-    def goal_test(self, state):
-        self.goal_tests += 1
-        result = self.problem.goal_test(state)
-        if result:
-            self.found = state
-        return result
-
-    def path_cost(self, c, state1, action, state2):
-        return self.problem.path_cost(c, state1, action, state2)
-
-    def value(self, state):
-        return self.problem.value(state)
-
-    def __getattr__(self, attr):
-        return getattr(self.problem, attr)
-
-    def __repr__(self):
-        return "<{:4d}/{:4d}/{:4d}/{}>".format(
-            self.succs, self.goal_tests, self.states, str(self.found)[:4]
-        )
+    return current.state, state_count, execution_time, problem.h(current)
 
 
 # ______________________________________________________________________________
 
 
-class NQueensAgent(SimpleProblemSolvingAgentProgram):
+def exp_schedule(k=20, lam=0.005, limit=100):
+    """One possible schedule function for simulated annealing"""
+    return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
-    def update_state(self, state, percept):
-        return percept
 
-    def formulate_goal(self, state):
-        pass
+def simulated_annealing(problem, schedule=exp_schedule()):
+    current = Node(problem.initial)
+    for t in range(sys.maxsize):
+        T = schedule(t)
+        if T == 0:
+            return current
+        neighbors = current.expand(problem)
+        if not neighbors:
+            return current
+        next_choice = random.choice(neighbors)
+        delta_e = abs(problem.value(next_choice.state) - problem.value(current.state))
+        if delta_e > 0 or probability(np.exp(delta_e / T)):
+            current = next_choice
 
-    def formulate_problem(self, state, goal):
-        problem = NQueensProblem(state)
-        problem.initial = tuple([random.randint(0, state - 1) for _ in range(state)])
-        return problem
+# _____________________________________________________________________________
 
-    def search(self, problem):
-        return [hill_climbing(problem)]
+
+def genetic_search(problem, ngen=1000, pmut=0.1, n=20):
+    """Call genetic_algorithm on the appropriate parts of a problem.
+    This requires the problem to have states that can mate and mutate,
+    plus a value method that scores states."""
+
+    # NOTE: This is not tested and might not work.
+    # TODO: Use this function to make Problems work with genetic_algorithm.
+
+    s = problem.initial_state
+    states = [problem.result(s, a) for a in problem.actions(s)]
+    random.shuffle(states)
+    return genetic_algorithm(states[:n], problem.value, ngen, pmut)
+
+
+def genetic_algorithm(
+    population, fitness_fn, gene_pool=[0, 1], f_thres=None, ngen=1000, pmut=0.1
+):
+    """[Figure 4.8]"""
+    for i in range(ngen):
+        population = [
+            mutate(recombine(*select(2, population, fitness_fn)), gene_pool, pmut)
+            for i in range(len(population))
+        ]
+
+        fittest_individual = fitness_threshold(fitness_fn, f_thres, population)
+        if fittest_individual:
+            return fittest_individual
+
+    return max(population, key=fitness_fn)
+
+
+def fitness_threshold(fitness_fn, f_thres, population):
+    if not f_thres:
+        return None
+
+    fittest_individual = max(population, key=fitness_fn)
+    if fitness_fn(fittest_individual) >= f_thres:
+        return fittest_individual
+
+    return None
+
+
+def init_population(pop_number, gene_pool, state_length):
+    """Initializes population for genetic algorithm
+    pop_number  :  Number of individuals in population
+    gene_pool   :  List of possible values for individuals
+    state_length:  The length of each individual"""
+    g = len(gene_pool)
+    population = []
+    for i in range(pop_number):
+        new_individual = [
+            gene_pool[random.randrange(0, g)] for j in range(state_length)
+        ]
+        population.append(new_individual)
+
+    return population
+
+
+def select(r, population, fitness_fn):
+    fitnesses = map(fitness_fn, population)
+    sampler = weighted_sampler(population, fitnesses)
+    return [sampler() for i in range(r)]
+
+
+def recombine(x, y):
+    n = len(x)
+    c = random.randrange(0, n)
+    return x[:c] + y[c:]
+
+
+def recombine_uniform(x, y):
+    n = len(x)
+    result = [0] * n
+    indexes = random.sample(range(n), n)
+    for i in range(n):
+        ix = indexes[i]
+        result[ix] = x[ix] if i < n / 2 else y[ix]
+
+    return "".join(str(r) for r in result)
+
+
+def mutate(x, gene_pool, pmut):
+    if random.uniform(0, 1) >= pmut:
+        return x
+
+    n = len(x)
+    g = len(gene_pool)
+    c = random.randrange(0, n)
+    r = random.randrange(0, g)
+
+    new_gene = gene_pool[r]
+    return x[:c] + [new_gene] + x[c + 1 :]
+
+
+# _____________________________________________________________________________
