@@ -66,25 +66,19 @@ class NQueensProblem(Problem):
     """
 
     def __init__(self, N):
-        super().__init__(tuple([-1] * N))
+        super().__init__(tuple([random.randint(0, N - 1)] * N))
         self.N = N
 
     def actions(self, state):
-        """In the leftmost empty column, try all non-conflicting rows."""
-        if state[-1] != -1:
-            return []  # All columns filled; no successors
-        else:
-            col = state.index(-1)
-            return [
-                row for row in range(self.N) if not self.conflicted(state, row, col)
-            ]
+        return [
+            state[:col] + (i,) + state[col + 1 :]  # Create a new state
+            for col in range(self.N)  # Iterate over each element (column)
+            for i in range(self.N)  # Iterate over all possible values for that element
+            if i != state[col]  # Skip if the value is the same as the current one
+        ]
 
-    def result(self, state, row):
-        """Place the next queen at the given row."""
-        col = state.index(-1)
-        new = list(state[:])
-        new[col] = row
-        return tuple(new)
+    def result(self, state, action):
+        return action
 
     def conflicted(self, state, row, col):
         """Would placing a queen at (row, col) conflict with anything?"""
@@ -112,7 +106,7 @@ class NQueensProblem(Problem):
         num_conflicts = 0
         for c1, r1 in enumerate(node.state):
             for c2, r2 in enumerate(node.state):
-                if (r1, c1) != (r2, c2) and r1 != -1 and r2 != -1:
+                if (r1, c1) != (r2, c2):
                     num_conflicts += self.conflict(r1, c1, r2, c2)
 
         return num_conflicts
