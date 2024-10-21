@@ -70,19 +70,22 @@ class NQueensProblem(Problem):
     """
 
     def __init__(self, N):
-        super().__init__(tuple([random.randint(0, N - 1)] * N))
         self.N = N
+        super().__init__(tuple(random.choice(self.gene_pool()) for _ in range(self.N)))
 
     def actions(self, state):
         return [
-            state[:col] + (i,) + state[col + 1 :]  # Create a new state
-            for col in range(self.N)  # Iterate over each element (column)
-            for i in range(self.N)  # Iterate over all possible values for that element
-            if i != state[col]  # Skip if the value is the same as the current one
+            (col, new_row)
+            for col in range(self.N)
+            for new_row in range(self.N)
+            if new_row != state[col]
         ]
 
     def result(self, state, action):
-        return action
+        column, new_row = action
+        new_state = list(state)
+        new_state[column] = new_row
+        return tuple(new_state)
 
     def conflicted(self, state, row, col):
         """Would placing a queen at (row, col) conflict with anything?"""
@@ -105,19 +108,31 @@ class NQueensProblem(Problem):
             self.conflicted(state, state[col], col) for col in range(len(state))
         )
 
-    def h(self, node):
+    def h(self, state):
         """Return number of conflicting queens for a given node"""
         num_conflicts = 0
-        for c1, r1 in enumerate(node.state):
-            for c2, r2 in enumerate(node.state):
+        for c1, r1 in enumerate(state):
+            for c2, r2 in enumerate(state):
                 if (r1, c1) != (r2, c2):
                     num_conflicts += self.conflict(r1, c1, r2, c2)
 
         return num_conflicts
 
     def value(self, state):
-        """Return the negative of the heuristic (number of conflicts) to be maximized by hill climbing."""
-        return -self.h(Node(state))
+        return self.N * (self.N - 1) - self.h(state)
+
+    def random_action(self, state):
+        col = random.randint(0, self.N - 1)
+        row = state[col]
+        while row == state[col]:
+            row = random.randint(0, self.N - 1)
+        return (col, row)
+
+    def gene_pool(self):
+        return list(range(self.N))
+
+    def f_thres(self):
+        return self.N * (self.N - 1)
 
 
 # ______________________________________________________________________________
@@ -220,26 +235,53 @@ def hill_climbing(problem):
 # ______________________________________________________________________________
 
 
-def benchmark(search_fn, problem):
-    """
-    Benchmark local search algorithms.
+class InstrumentedProblem(Problem):
+    """Delegates to a problem, and keeps statistics."""
 
-    Args:
-    - search_fn: The search function to be benchmarked.
-    - problem: The problem instance for the search function.
+    def __init__(self, problem):
+        self.problem = problem
+        self.succs = self.goal_tests = self.states = 0
+        self.found = None
 
-    Returns:
-    - result: The output of the search function (final state).
-    - state_count: The number of states explored.
-    - execution_time: The time taken to execute the search function.
-    - heuristic_value: The heuristic value of the resulting state.
-    """
-    start_time = time.time()
-    current = search_fn(problem)
-    execution_time = time.time() - start_time
-    state_count = current.depth
+    def actions(self, state):
+        self.succs += 1
+        return self.problem.actions(state)
 
-    return current.state, state_count, execution_time, problem.h(current)
+    def result(self, state, action):
+        self.states += 1
+        return self.problem.result(state, action)
+
+    def goal_test(self, state):
+        self.goal_tests += 1
+        result = self.problem.goal_test(state)
+        if result:
+            self.found = state
+        return result
+
+    def path_cost(self, c, state1, action, state2):
+        return self.problem.path_cost(c, state1, action, state2)
+
+    def value(self, state):
+        return self.problem.value(state)
+
+    def __getattr__(self, attr):
+        return getattr(self.problem, attr)
+
+    def __repr__(self):
+        return "<{:4d}/{:4d}/{:4d}/{}>".format(
+            self.succs, self.goal_tests, self.states, str(self.found)[:4]
+        )
+
+
+# ______________________________________________________________________________
+
+
+def timed_call(fn, *args, **kwargs):
+    """Call function with args; return the time in seconds and result."""
+    t0 = time.time()
+    result = fn(*args, **kwargs)
+    t1 = time.time()
+    return t1 - t0, result
 
 
 # ______________________________________________________________________________
@@ -256,13 +298,13 @@ def simulated_annealing(problem, schedule=exp_schedule()):
         T = schedule(t)
         if T == 0:
             return current
-        neighbors = current.expand(problem)
-        if not neighbors:
+        next_choice = current.child_node(problem, problem.random_action(current.state))
+        if not next_choice:
             return current
-        next_choice = random.choice(neighbors)
-        delta_e = abs(problem.value(next_choice.state) - problem.value(current.state))
+        delta_e = problem.value(next_choice.state) - problem.value(current.state)
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
+
 
 # _____________________________________________________________________________
 
@@ -271,14 +313,17 @@ def genetic_search(problem, ngen=1000, pmut=0.1, n=20):
     """Call genetic_algorithm on the appropriate parts of a problem.
     This requires the problem to have states that can mate and mutate,
     plus a value method that scores states."""
-
-    # NOTE: This is not tested and might not work.
-    # TODO: Use this function to make Problems work with genetic_algorithm.
-
-    s = problem.initial_state
+    s = problem.initial
     states = [problem.result(s, a) for a in problem.actions(s)]
     random.shuffle(states)
-    return genetic_algorithm(states[:n], problem.value, ngen, pmut)
+    return genetic_algorithm(
+        states[:n],
+        problem.value,
+        gene_pool=problem.gene_pool(),
+        f_thres=problem.f_thres(),
+        ngen=ngen,
+        pmut=pmut,
+    )
 
 
 def genetic_algorithm(
@@ -288,14 +333,14 @@ def genetic_algorithm(
     for i in range(ngen):
         population = [
             mutate(recombine(*select(2, population, fitness_fn)), gene_pool, pmut)
-            for i in range(len(population))
+            for _ in range(len(population))
         ]
 
         fittest_individual = fitness_threshold(fitness_fn, f_thres, population)
         if fittest_individual:
-            return fittest_individual
+            return Node(fittest_individual, path_cost=i+1)
 
-    return max(population, key=fitness_fn)
+    return Node(max(population, key=fitness_fn), path_cost=i+1)
 
 
 def fitness_threshold(fitness_fn, f_thres, population):
@@ -307,22 +352,6 @@ def fitness_threshold(fitness_fn, f_thres, population):
         return fittest_individual
 
     return None
-
-
-def init_population(pop_number, gene_pool, state_length):
-    """Initializes population for genetic algorithm
-    pop_number  :  Number of individuals in population
-    gene_pool   :  List of possible values for individuals
-    state_length:  The length of each individual"""
-    g = len(gene_pool)
-    population = []
-    for i in range(pop_number):
-        new_individual = [
-            gene_pool[random.randrange(0, g)] for j in range(state_length)
-        ]
-        population.append(new_individual)
-
-    return population
 
 
 def select(r, population, fitness_fn):
@@ -337,28 +366,11 @@ def recombine(x, y):
     return x[:c] + y[c:]
 
 
-def recombine_uniform(x, y):
-    n = len(x)
-    result = [0] * n
-    indexes = random.sample(range(n), n)
-    for i in range(n):
-        ix = indexes[i]
-        result[ix] = x[ix] if i < n / 2 else y[ix]
-
-    return "".join(str(r) for r in result)
-
-
 def mutate(x, gene_pool, pmut):
     if random.uniform(0, 1) >= pmut:
         return x
-
-    n = len(x)
-    g = len(gene_pool)
-    c = random.randrange(0, n)
-    r = random.randrange(0, g)
-
-    new_gene = gene_pool[r]
-    return x[:c] + [new_gene] + x[c + 1 :]
+    c = random.randrange(0, len(x))
+    return x[:c] + tuple([random.choice(gene_pool)]) + x[c + 1 :]
 
 
 # _____________________________________________________________________________
