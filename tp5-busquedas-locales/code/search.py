@@ -292,7 +292,7 @@ def exp_schedule(k=20, lam=0.005, limit=100):
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
 
-def simulated_annealing(problem, schedule=exp_schedule()):
+def simulated_annealing(problem, schedule=exp_schedule(k=100, limit=1000)):
     current = Node(problem.initial)
     for t in range(sys.maxsize):
         T = schedule(t)
@@ -313,9 +313,10 @@ def genetic_search(problem, ngen=1000, pmut=0.1, n=20):
     """Call genetic_algorithm on the appropriate parts of a problem.
     This requires the problem to have states that can mate and mutate,
     plus a value method that scores states."""
-    s = problem.initial
-    states = [problem.result(s, a) for a in problem.actions(s)]
-    random.shuffle(states)
+    states = [
+        tuple(random.choice(problem.gene_pool()) for _ in range(problem.N))
+        for _ in range(n)
+    ]
     return genetic_algorithm(
         states[:n],
         problem.value,
@@ -338,9 +339,9 @@ def genetic_algorithm(
 
         fittest_individual = fitness_threshold(fitness_fn, f_thres, population)
         if fittest_individual:
-            return Node(fittest_individual, path_cost=i+1)
+            return Node(fittest_individual, path_cost=i + 1)
 
-    return Node(max(population, key=fitness_fn), path_cost=i+1)
+    return Node(max(population, key=fitness_fn), path_cost=i + 1)
 
 
 def fitness_threshold(fitness_fn, f_thres, population):
